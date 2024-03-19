@@ -1,0 +1,14 @@
+[
+    {
+        "title": "Identity",
+        "firstname": "First name",
+        "lastname": "Last name",
+        "dateofbirth": "Date of birth",
+        "pickdate": "Pick a date",
+        "height": "Height",
+        "sex": "Sex",
+        "men": "Men",
+        "women": "Women",
+        "create": "Create"
+    }
+]
