@@ -1,17 +1,32 @@
 fx_version "cerulean"
-games { "gta5", "rdr3" }
+game "gta5"
 
-description "Basic React (TypeScript) with Taildwind and Shadcn UI & Lua Game Scripts Boilerplate"
-author "Project Error and Skafir"
-version '1.5.0'
+description "ESX Identity redesigned"
+author "Var"
 
-lua54 'yes'
+version "1.11.0"
 
-ui_page 'web/dist/index.html'
+lua54 "yes"
 
-client_script "client/**/*"
+ui_page "web/build/index.html"
+
+client_scripts { "client/*.lua" }
+
+server_scripts {
+	"@oxmysql/lib/MySQL.lua",
+	"server/*.lua"
+}
+
+shared_scripts {
+	"@es_extended/imports.lua",
+	"@es_extended/locale.lua",
+	"shared/*.lua",
+	"locales/*.lua"
+}
 
 files {
-	'web/dist/index.html',
-	'web/dist/**/*',
+	"web/build/index.html",
+	"web/build/**/*"
 }
+
+dependency 'es_extended'
