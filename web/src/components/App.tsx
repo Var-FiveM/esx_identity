@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { debugData } from "@/utils/debugData";
 import { fetchNui } from "@/utils/fetchNui";
 import { cn } from "@/lib/utils"
 
 import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormField, FormItem, FormLabel } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Calendar } from '@/components/ui/calendar'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -19,10 +19,10 @@ import { useForm } from "react-hook-form"
 import { CalendarIcon, PersonStanding } from 'lucide-react';
 
 const formSchema = z.object({
-  first_name: z.string().min(2, {}),
-  last_name: z.string().min(2, {}),
-  dob: z.string({}),
-  sex: z.enum(["0", "1"], {}),
+  firstname: z.string().min(2, {}),
+  lastname: z.string().min(2, {}),
+  dateofbirth: z.string({}),
+  sex: z.enum(["m", "f"], {}),
   height: z.string().min(3, {}),
 })
 
@@ -34,41 +34,57 @@ debugData([
 ])
 
 const App: React.FC = () => {
+  const [Locale, setLocale] = useState<Array<any>>([]);
+
+  async function fetchData() {
+    try {
+      const res = await fetch('./locales/traduction.json');
+      const data = await res.json();
+
+      setLocale(data)
+    } catch (error) {
+      console.error('Error during JSON retrieval :', error);
+    }
+  }
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    fetchNui("register", values)
   }
 
   return (
     <div className="flex justify-center items-center h-screen">
       <div className="bg-card p-6 h-max w-[400px] space-y-4">
-        <div className="uppercase text-center text-white text-2xl font-semibold">Identity</div>
+        <div className="uppercase text-center text-white text-2xl font-semibold">{Locale[0]?.title}</div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <FormField
               control={form.control}
-              name="first_name"
+              name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">First Name</FormLabel>
+                  <FormLabel className="text-white">{Locale[0]?.firstname}</FormLabel>
                   <FormControl>
-                    <Input placeholder="First Name" {...field} className="text-white" />
+                    <Input placeholder={Locale[0]?.firstname} {...field} className="text-white" />
                   </FormControl>
                 </FormItem>
               )}
             />
             <FormField
               control={form.control}
-              name="last_name"
+              name="lastname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Last Name</FormLabel>
+                  <FormLabel className="text-white">{Locale[0]?.lastname}</FormLabel>
                   <FormControl>
-                    <Input placeholder="Last Name" {...field} className="text-white" />
+                    <Input placeholder={Locale[0]?.lastname} {...field} className="text-white" />
                   </FormControl>
                 </FormItem>
               )}
@@ -76,20 +92,20 @@ const App: React.FC = () => {
             <div className="grid grid-cols-2 gap-2">
               <FormField
                 control={form.control}
-                name="dob"
+                name="dateofbirth"
                 render={({ field }) => (
                   <FormItem className="col-span-1">
-                    <FormLabel className="text-white">Date of birth</FormLabel>
+                    <FormLabel className="text-white">{Locale[0]?.dateofbirth}</FormLabel>
                     <FormControl>
                       <Popover>
                         <PopoverTrigger asChild>
                           <Button variant={"outline"} className={cn("w-[240px] justify-start text-left font-normal text-white", !field.value && "text-muted-foreground")}>
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                            {field.value ? format(field.value, "PPP") : <span>{Locale[0]?.pickdate}</span>}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent align="start" className="dark w-auto p-0">
-                          <Calendar mode="single" captionLayout="dropdown-buttons" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => { if (date) { const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`; field.onChange(formattedDate); } }} fromYear={1960} toYear={2003} />
+                          <Calendar mode="single" captionLayout="dropdown-buttons" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => { if (date) { const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`; field.onChange(formattedDate); } }} fromYear={1900} toYear={2005} />
                         </PopoverContent>
                       </Popover>
                     </FormControl>
@@ -102,7 +118,7 @@ const App: React.FC = () => {
               name="height"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Height</FormLabel>
+                  <FormLabel className="text-white">{Locale[0]?.height}</FormLabel>
                   <FormControl>
                     <Input placeholder="Height" {...field} className="text-white" type="number" />
                   </FormControl>
@@ -114,25 +130,25 @@ const App: React.FC = () => {
               name="sex"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white">Gender</FormLabel>
+                  <FormLabel className="text-white">{Locale[0]?.sex}</FormLabel>
                   <FormControl>
                     <RadioGroup onValueChange={(value) => { field.onChange(value); }} defaultValue={field.value} className="grid grid-cols-2">
                       <FormItem className="col-span-1">
                         <FormControl>
-                          <RadioGroupItem value="0" className="peer sr-only" />
+                          <RadioGroupItem value="m" className="peer sr-only" />
                         </FormControl>
                         <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover-bg-accent hover-text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-white">
                           <PersonStanding className="mb-3 h-6 w-6" />
-                          Men
+                          {Locale[0]?.men}
                         </FormLabel>
                       </FormItem>
                       <FormItem className="col-span-1">
                         <FormControl>
-                          <RadioGroupItem value="1" className="peer sr-only" />
+                          <RadioGroupItem value="f" className="peer sr-only" />
                         </FormControl>
                         <FormLabel className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover-bg-accent hover-text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary text-white">
                           <PersonStanding className="mb-3 h-6 w-6" />
-                          Women
+                          {Locale[0]?.women}
                         </FormLabel>
                       </FormItem>
                     </RadioGroup>
@@ -141,7 +157,7 @@ const App: React.FC = () => {
               )}
             />
             <div className="pt-2">
-              <Button variant="default" type="submit" className="text-white">Create</Button>
+              <Button variant="default" type="submit" className="text-white">{Locale[0]?.create}</Button>
             </div>
           </form>
         </Form>
