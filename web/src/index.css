@@ -1,0 +1,25 @@
+@import "../public/variables.css"; 
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.rdp [aria-hidden="true"] {
+  @apply hidden;
+}
+
+.rdp-vhidden {
+  @apply hidden;
+}
+
+select {
+  @apply bg-muted border-none rounded
+}
+
+select::-webkit-scrollbar {
+  display: none;
+}
