@@ -22,3 +22,8 @@ This is the simple basic resource of esx_identity but with the web interface mod
 ![App Screenshot](https://cdn.discordapp.com/attachments/905724783885426698/1219685958526439455/image.png?ex=660c3411&is=65f9bf11&hm=588c56e3ec5c4ce02c4b6670162d029ad91b63cf42b2317900a5ca266eb770fa&)
 
 Theme/Language can be easily changed : [Documentation UI](https://doc.var-fivem.com/theme-translate/change-theme)
+
+## Support 📞
+
+If you have a problem do not hesitate to ask for help or contact us on our discord
+[Discord](https://discord.gg/M396eGN2GW)
