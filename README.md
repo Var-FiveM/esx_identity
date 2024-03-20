@@ -25,5 +25,4 @@ Theme/Language can be easily changed : [Documentation UI](https://doc.var-fivem.
 
 ## Support 📞
 
-If you have a problem do not hesitate to ask for help or contact us on our discord
-[Discord](https://discord.gg/M396eGN2GW)
+If you have a problem do not hesitate to ask for help or contact us on our [Discord](https://discord.gg/M396eGN2GW)
